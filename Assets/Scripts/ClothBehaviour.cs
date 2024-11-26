@@ -13,6 +13,9 @@ namespace RevisedParticle
         public ParticleManager manager { get; private set; }
         private Transform cachedTransform;
 
+        private int frameCounter = 0;
+        private const int gizmoUpdateFrequency = 1;
+
         [SerializeField]
         private Logger _logger;
 
@@ -35,11 +38,15 @@ namespace RevisedParticle
         
         private void OnDrawGizmos()
         {
+                
             if (manager.IsUnityNull()) return;
             
-            Gizmos.color = Color.red;
+            //frameCounter++;
+            //if (frameCounter % gizmoUpdateFrequency != 0) return;
 
-            manager.DrawParticles();
+            //Gizmos.color = Color.red;
+
+            manager.DrawParticlesAndSprings();
         } 
 
         void Log(object message)

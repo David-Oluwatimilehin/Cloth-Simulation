@@ -75,7 +75,11 @@ namespace RevisedParticle
             
             foreach (Spring s in springList)
             {
-                Gizmos.DrawLine(s.startParticle.pos, s.endParticle.pos);
+                Vector3 posA = s.startParticle.pos;
+                Vector3 posB = s.endParticle.pos;
+
+                Debug.DrawLine(posA, posB, Color.green);
+                
             }
         }
     }

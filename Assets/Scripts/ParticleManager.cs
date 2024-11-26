@@ -13,6 +13,7 @@ namespace RevisedParticle
         //public List<Particle> particleList { get; private set; }
         public Particle[,] particleArr { get; private set; }
         private SpringManager springManager;
+        
         private SimulationValues sv;
 
         int rows, columns;
@@ -132,22 +133,22 @@ namespace RevisedParticle
             }                 
             
         }
+        
 
+        
 
-        public void DrawParticles()
+        public void DrawParticlesAndSprings()
         {
-            
             if (particleArr.IsUnityNull()) return;
 
             //Debug.Log("Got To Here");
             
-            for (int i = 0; i < rows; i++)
+            foreach (var particle in particleArr)
             {
-                for (int j = 0; j < columns; j++)
-                {
-                    Gizmos.DrawSphere(particleArr[i, j].pos, radius);
-                }
+                Gizmos.color = particle.IsFixed ? Color.white : Color.red;
+                Gizmos.DrawSphere(particle.pos, radius);
             }
+
             springManager.DrawSprings();
 
         }
