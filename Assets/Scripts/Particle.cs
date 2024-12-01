@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace RevisedParticle
 {
+    // TODO: Change the SimVal to accept fixed mass 
     public class Particle
     {
         public Vector3 pos { get; private set; }
@@ -15,6 +16,7 @@ namespace RevisedParticle
 
         private float _gravity;
         private float _friction;
+        private float _dragCoefficient;
         private float _mass;
         private bool _isFixed;
 
@@ -26,8 +28,8 @@ namespace RevisedParticle
             prevPos = initPos;
 
             _mass = constants.mass;
-            _gravity = constants.gravity;
             _friction = constants.friction;
+            _dragCoefficient = constants.dragCoefficient;
             
             acc = Vector3.zero;
             _isFixed = false;
@@ -36,31 +38,32 @@ namespace RevisedParticle
 
         public void AddForce(Vector3 force)
         {
-            acc += force/_mass;
+            //if(force == Vector3.zero) return;
+
+            acc += force / _mass;
         }
         public void SetMass(float mass)
         {
             _mass = mass;
         }
-                     
-        public void SumForces(Vector3 windForce)
+        public void SumInternalForces(float time)
         {
-            //if (_mass < 0) return;
+            Vector3 dragForce = -GetRelativeVelocity(time).normalized * _dragCoefficient * (GetRelativeVelocity(time).magnitude * GetRelativeVelocity(time).magnitude);
+            AddForce(dragForce);
 
-            Vector3 gravityForce = new Vector3(0, -_gravity, 0);
-            AddForce(gravityForce);
-
-            //AddForce(windForce);
-            
-            //Debug.Log(acc);
+            Vector3 frictionForce= -GetRelativeVelocity(-time).normalized * _friction;
+            AddForce(frictionForce);
         }
+        
+                     
+        
         public void Update(float time)
         {
             if (_isFixed) return;
 
             Vector3 tempPos = pos;
-            
-            pos += (pos - prevPos) * (1-_friction) + acc * time * time;
+
+            pos += (pos - prevPos) * (1 - _friction) + acc * time * time;
 
             prevPos = tempPos;
 

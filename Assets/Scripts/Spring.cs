@@ -8,7 +8,7 @@ namespace RevisedParticle{
         public Particle startParticle { get; private set; }
         public Particle endParticle { get; private set; }
         
-        private readonly float restDist;
+        public float restDist { get; private set; }
         private readonly float springStiffness;
         private readonly float springDamping;
         
@@ -22,6 +22,7 @@ namespace RevisedParticle{
             springDamping = dampValue;
 
         }
+        
         public void ApplyForce(float dt)
         {
             Vector3 direction = endParticle.pos - startParticle.pos;

@@ -41,8 +41,8 @@ namespace RevisedParticle
                 
             if (manager.IsUnityNull()) return;
             
-            //frameCounter++;
-            //if (frameCounter % gizmoUpdateFrequency != 0) return;
+            frameCounter++;
+            if (frameCounter % gizmoUpdateFrequency != 0) return;
 
             //Gizmos.color = Color.red;
 

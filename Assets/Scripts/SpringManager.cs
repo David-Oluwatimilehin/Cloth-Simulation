@@ -17,22 +17,16 @@ namespace RevisedParticle
             springList = new List<Spring>();
             
         }
-
-        public void CreateSpring(Particle a, Particle b, SimulationValues sv, bool isDiag)
+        public void CreateSpring(Particle a, Particle b, SimulationValues sv,float diagRestLength)
         {
-            // TODO: Refactor this to accept a single constructor 
-            Spring spring;
             
-            if (isDiag)
-            {
-                float diagRestLength = sv.spacing * Mathf.Sqrt(2);
-                spring = new Spring(a, b, diagRestLength, sv.shearSpringConstant, sv.shearDampValue);
-            }
-            else
-            {
-                spring = new Spring(a, b, sv.spacing, sv.springConstant, sv.dampValue);
-            }
+            Spring spring = new Spring(a, b, diagRestLength, sv.shearSpringConstant, sv.shearDampValue);
+            springList.Add(spring);
+        }
+        public void CreateSpring(Particle a, Particle b, SimulationValues sv)
+        {
             
+            Spring spring = new Spring(a, b, sv.spacing, sv.springConstant, sv.dampValue);      
             springList.Add(spring);
         }
         public void UpdateSprings(float dt)
@@ -40,10 +34,13 @@ namespace RevisedParticle
             foreach (var spring in springList)
             {
                 spring.ApplyForce(dt);
+
             }
         }
         public void SpawnSprings(Particle[,] particleArray, SimulationValues simValues)
         {
+            float diagLength = Mathf.Sqrt(2) * simValues.spacing;
+
             for (int i = 0; i < simValues.rows; i++)
             {
                 for (int j = 0; j < simValues.columns; j++)
@@ -51,16 +48,16 @@ namespace RevisedParticle
                     Particle current = particleArray[i, j];
 
                     if (i < simValues.rows - 1)
-                        CreateSpring(current, particleArray[i + 1, j], simValues,false);
+                        CreateSpring(current, particleArray[i + 1, j], simValues);
 
                     if (j < simValues.columns - 1)
-                        CreateSpring(current, particleArray[i, j + 1], simValues,false);
+                        CreateSpring(current, particleArray[i, j + 1], simValues);
 
                     if (i < simValues.rows - 1 && j < simValues.columns - 1)
-                        CreateSpring(current, particleArray[i + 1, j + 1], simValues, true);
+                        CreateSpring(current, particleArray[i + 1, j + 1], simValues, diagLength);
 
                     if (i < simValues.rows - 1 && j > 0)
-                        CreateSpring(current, particleArray[i + 1, j - 1], simValues, true);
+                        CreateSpring(current, particleArray[i + 1, j - 1], simValues, diagLength);
                 }
             }
 
@@ -69,7 +66,7 @@ namespace RevisedParticle
         }
         public void DrawSprings()
         {
-            if (springList.IsUnityNull()) return;
+            //if (springList.IsUnityNull()) return;
             
             Gizmos.color = Color.green;
             

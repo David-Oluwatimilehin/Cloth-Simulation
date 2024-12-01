@@ -12,6 +12,9 @@ namespace DavidOluwatimilehin
         [Header("Constants")]
         public float mass = 1;
         public float gravity = 9.81f;
+        public float windStrength = 10f;
+        public float dragCoefficient = 1f;
+
         public float springConstant=10f;
         public float dampValue = 0.9f;
         public float friction=0.95f;

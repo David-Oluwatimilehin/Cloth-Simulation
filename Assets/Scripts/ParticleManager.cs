@@ -5,20 +5,23 @@ using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
+using static UnityEditor.PlayerSettings;
 
 namespace RevisedParticle
 {
     public class ParticleManager
     {
+        // Forces
+        Force force;
+
         //public List<Particle> particleList { get; private set; }
         public Particle[,] particleArr { get; private set; }
         private SpringManager springManager;
         
         private SimulationValues sv;
 
-        int rows, columns;
-
-        private Vector3 windForce;
+        private int rows, columns;
+        
         private float windTime = 0f;
 
         readonly float radius;
@@ -31,11 +34,11 @@ namespace RevisedParticle
             columns = simValues.columns;
             spacing = simValues.spacing;
             radius = simValues.particleRadius;
-            
             sv = simValues;
             
             particleArr = new Particle[rows, columns];
-            
+
+            force = new Force(simValues.windStrength,simValues.gravity);
             springManager = new SpringManager();
             
                         
@@ -105,44 +108,37 @@ namespace RevisedParticle
 
         }
 
-        public Vector3 GenerateWindForce(float time, float scale, float intensity)
-        {
-            float noiseX = Mathf.PerlinNoise(time * scale, 0) * 2 - 1; // Range [-1, 1]
-            float noiseY = Mathf.PerlinNoise(0, time * scale) * 2 - 1;
-
-            // Generate wind force vector
-            return new Vector3(noiseX, noiseY,0) * intensity;
-        }
-
         public void UpdateParticles(float deltaTime)
         {
             windTime += deltaTime;
-            windForce = GenerateWindForce(windTime, 0.1f, 10f);
+            
+            Vector3 gravityForce = force.GenerateGravityForce();
+            Vector3 windForce= force.GenerateWindForce(windTime, 0.1f);
 
             foreach (var particle in particleArr)
             {
-                particle.SumForces(windForce);
+                              
+                particle.AddForce(gravityForce);
+                particle.AddForce(windForce);
+                particle.SumInternalForces(deltaTime);
             }
 
             springManager.UpdateSprings(deltaTime);
 
             foreach (var particle in particleArr)
             {
-                particle.Update(deltaTime); 
-                //particle.ClearForce();
-            }                 
-            
-        }
-        
+                particle.Update(deltaTime);
+                
+            }
 
+        }
         
 
         public void DrawParticlesAndSprings()
         {
             if (particleArr.IsUnityNull()) return;
 
-            //Debug.Log("Got To Here");
-            
+                     
             foreach (var particle in particleArr)
             {
                 Gizmos.color = particle.IsFixed ? Color.white : Color.red;

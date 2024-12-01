@@ -14,12 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mass: 1
   gravity: 9.81
-  springConstant: 15
-  dampValue: 0.5
+  windStrength: 10
+  dragCoefficient: 1
+  springConstant: 40
+  dampValue: 0.75
   friction: 0.95
-  shearSpringConstant: 7
-  shearDampValue: 0.7
-  rows: 15
-  columns: 15
+  shearSpringConstant: 35
+  shearDampValue: 0.9
+  rows: 12
+  columns: 10
   spacing: 1
   particleRadius: 0.15
