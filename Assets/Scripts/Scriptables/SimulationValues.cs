@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace DavidOluwatimilehin
+namespace RevisedParticle
 {
     [CreateAssetMenu(fileName = "SimValue", menuName = "ScriptableObjects/Simulation Values")]
     
@@ -20,9 +20,8 @@ namespace DavidOluwatimilehin
         public float friction=0.95f;
 
         [Header("Shear Springs")]
-        public float shearSpringConstant=7f;
+        public float shearSpringConstant = 7f;
         public float shearDampValue = 0.7f;
-        
         
 
         [Header("Setup")]

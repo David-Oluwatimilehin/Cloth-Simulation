@@ -1,4 +1,4 @@
-using DavidOluwatimilehin;
+
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,22 +14,23 @@ namespace RevisedParticle
         // Forces
         Force force;
 
-        //public List<Particle> particleList { get; private set; }
+        
         public Particle[,] particleArr { get; private set; }
         private SpringManager springManager;
         
         private SimulationValues sv;
-
-        private int rows, columns;
         
+        private int rows, columns;
+        bool windEffect;
         private float windTime = 0f;
 
         readonly float radius;
         readonly float spacing;
         public ParticleManager(SimulationValues simValues) {
-                 
+
             //
-                              
+            windEffect = false;
+            
             rows = simValues.rows;
             columns = simValues.columns;
             spacing = simValues.spacing;
@@ -73,7 +74,10 @@ namespace RevisedParticle
 
 
         }
-
+        public void SetWindActing()
+        {
+            windEffect = !windEffect;
+        }
 
         public void SpawnParticles(Transform parentTransform)
         {
@@ -112,15 +116,20 @@ namespace RevisedParticle
         {
             windTime += deltaTime;
             
-            Vector3 gravityForce = force.GenerateGravityForce();
-            Vector3 windForce= force.GenerateWindForce(windTime, 0.1f);
+            Vector3 windForce = Vector3.zero;
+            Vector3 gravityForce = force.GenerateGravityForce();  
 
+            if (windEffect)
+                windForce += force.GenerateWindForce(windTime, 0.25f);           
+            
             foreach (var particle in particleArr)
             {
                               
                 particle.AddForce(gravityForce);
                 particle.AddForce(windForce);
                 particle.SumInternalForces(deltaTime);
+                
+                
             }
 
             springManager.UpdateSprings(deltaTime);
@@ -128,7 +137,6 @@ namespace RevisedParticle
             foreach (var particle in particleArr)
             {
                 particle.Update(deltaTime);
-                
             }
 
         }

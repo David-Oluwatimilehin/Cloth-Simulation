@@ -1,4 +1,4 @@
-using DavidOluwatimilehin;
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -20,7 +20,7 @@ namespace RevisedParticle
         private float _mass;
         private bool _isFixed;
 
-        private float windIntensity;
+        
 
         public Particle(Vector3 initPos, SimulationValues constants)
         {
@@ -38,7 +38,7 @@ namespace RevisedParticle
 
         public void AddForce(Vector3 force)
         {
-            //if(force == Vector3.zero) return;
+            if(force == Vector3.zero) return;
 
             acc += force / _mass;
         }
