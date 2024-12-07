@@ -74,7 +74,7 @@ namespace RevisedParticle
             {
                 Vector3 posA = s.startParticle.pos;
                 Vector3 posB = s.endParticle.pos;
-
+                
                 Debug.DrawLine(posA, posB, Color.green);
                 
             }

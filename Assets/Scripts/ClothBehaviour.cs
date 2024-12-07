@@ -47,10 +47,10 @@ namespace RevisedParticle
         
         private void OnDrawGizmos()
         {
-                
             if (manager.IsUnityNull()) return;
             
             frameCounter++;
+
             if (frameCounter % gizmoUpdateFrequency != 0) return;
 
             manager.DrawParticlesAndSprings();

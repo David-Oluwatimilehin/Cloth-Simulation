@@ -150,7 +150,7 @@ namespace RevisedParticle
             foreach (var particle in particleArr)
             {
                 Gizmos.color = particle.IsFixed ? Color.white : Color.red;
-                Gizmos.DrawSphere(particle.pos, radius);
+                Gizmos.DrawWireSphere(particle.pos, radius);
             }
 
             springManager.DrawSprings();
