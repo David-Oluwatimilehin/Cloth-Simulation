@@ -9,27 +9,25 @@ namespace RevisedParticle
     public class Particle
     {
         public Vector3 pos { get; private set; }
-        public bool IsFixed { get => _isFixed; set => _isFixed = value; }
-
         private Vector3 prevPos;
         private Vector3 acc;
-
-        private float _gravity;
         private float _friction;
+        public bool IsFixed { get => _isFixed; set => _isFixed = value; }
+        
         private float _dragCoefficient;
         private float _mass;
         private bool _isFixed;
 
         
 
-        public Particle(Vector3 initPos, SimulationValues constants)
+        public Particle(Vector3 initPos, float mass, float friction, float dragValue)
         {
             pos = initPos;
             prevPos = initPos;
 
-            _mass = constants.mass;
-            _friction = constants.friction;
-            _dragCoefficient = constants.dragCoefficient;
+            _mass = mass;
+            _friction = friction;
+            _dragCoefficient = dragValue;
             
             acc = Vector3.zero;
             _isFixed = false;
@@ -51,7 +49,7 @@ namespace RevisedParticle
             Vector3 dragForce = -GetRelativeVelocity(time).normalized * _dragCoefficient * (GetRelativeVelocity(time).magnitude * GetRelativeVelocity(time).magnitude);
             AddForce(dragForce);
 
-            Vector3 frictionForce= -GetRelativeVelocity(-time).normalized * _friction;
+            Vector3 frictionForce= -GetRelativeVelocity(time).normalized * _friction;
             AddForce(frictionForce);
         }
         

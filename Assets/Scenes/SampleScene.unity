@@ -133,7 +133,6 @@ GameObject:
   m_Component:
   - component: {fileID: 255449116}
   - component: {fileID: 255449115}
-  - component: {fileID: 255449117}
   m_Layer: 0
   m_Name: ClothAnchor
   m_TagString: Untagged
@@ -153,9 +152,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52ca4c38c2c153d4b82df348d28e19a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  simStats: {fileID: 11400000, guid: 5dd2b9c62ef7fd64bb7b13ceac9231bf, type: 2}
-  setWind: 0
-  _logger: {fileID: 255449117}
+  simStats: {fileID: 11400000, guid: e0f77bd2d95d6f74eab3b06bb8d376bb, type: 2}
 --- !u!4 &255449116
 Transform:
   m_ObjectHideFlags: 0
@@ -171,19 +168,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &255449117
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 255449114}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7e686c17bcfb7534aa3fff93328f74d0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  showLogs: 1
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0

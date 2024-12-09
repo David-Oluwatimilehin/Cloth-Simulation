@@ -1,34 +1,37 @@
 
 using System.Collections;
 using System.Collections.Generic;
-using System.Data;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.UIElements;
+
 
 namespace RevisedParticle
 {
     public class SpringManager
     {
         private List<Spring> springList;
-        
-        public SpringManager() 
+        private readonly SimulationValues simValues;
+        public SpringManager(SimulationValues sv) 
         {
             springList = new List<Spring>();
-            
+            simValues = sv;
+
         }
-        public void CreateSpring(Particle a, Particle b, SimulationValues sv,float diagRestLength)
+        public void CreateSpring(Particle a, Particle b)
         {
-            
-            Spring spring = new Spring(a, b, diagRestLength, sv.shearSpringConstant, sv.shearDampValue);
+            StructuralSpring spring = new StructuralSpring(a, b, simValues.spacing, simValues.springConstant, simValues.dampValue);      
             springList.Add(spring);
         }
-        public void CreateSpring(Particle a, Particle b, SimulationValues sv)
+        public void CreateDiagonalSpring(Particle a, Particle b,float diagRestLength)
         {
-            
-            Spring spring = new Spring(a, b, sv.spacing, sv.springConstant, sv.dampValue);      
-            springList.Add(spring);
+            ShearSpring shearSpring = new ShearSpring(a, b, diagRestLength, simValues.shearSpringConstant, simValues.shearDampValue);
+            springList.Add(shearSpring);
         }
+        public void CreateBendingSpring(Particle a, Particle b, float restAngle)
+        {
+            BendingSpring bendSpring = new BendingSpring(a, b, simValues.bendSpringConstant, restAngle);
+            springList.Add(bendSpring);
+        }
+        
         public void UpdateSprings(float dt)
         {
             foreach (var spring in springList)
@@ -37,47 +40,58 @@ namespace RevisedParticle
 
             }
         }
-        public void SpawnSprings(Particle[,] particleArray, SimulationValues simValues)
+        public void SpawnSprings(Particle[,] particleArray)
         {
+            // Resting Distance for Shear Springs
             float diagLength = Mathf.Sqrt(2) * simValues.spacing;
-
+            int bendSpringCount = 0;
             for (int i = 0; i < simValues.rows; i++)
             {
                 for (int j = 0; j < simValues.columns; j++)
                 {
                     Particle current = particleArray[i, j];
 
+                    // For Structural Springs
                     if (i < simValues.rows - 1)
-                        CreateSpring(current, particleArray[i + 1, j], simValues);
+                        CreateSpring(current, particleArray[i + 1, j]);
 
                     if (j < simValues.columns - 1)
-                        CreateSpring(current, particleArray[i, j + 1], simValues);
+                        CreateSpring(current, particleArray[i, j + 1]);
 
+                    // For Shearing Springs
                     if (i < simValues.rows - 1 && j < simValues.columns - 1)
-                        CreateSpring(current, particleArray[i + 1, j + 1], simValues, diagLength);
+                        CreateDiagonalSpring(current, particleArray[i + 1, j + 1], diagLength);
+                        
 
                     if (i < simValues.rows - 1 && j > 0)
-                        CreateSpring(current, particleArray[i + 1, j - 1], simValues, diagLength);
+                        CreateDiagonalSpring(current, particleArray[i + 1, j - 1], diagLength);
+
+                    // For Bending Springs
+                    if (i + 2 < simValues.rows)
+                        CreateBendingSpring(current, particleArray[i + 2, j], simValues.spacing * 2);
+                        bendSpringCount++;
+
+                    if (j +2 < simValues.columns)
+                        CreateBendingSpring(current, particleArray[i, j + 2], simValues.spacing * 2);
+                        bendSpringCount++;
+
                 }
             }
 
-            Debug.Log("Spring Count: " + springList.Count);
+            Debug.Log("Spring Count: " + bendSpringCount);
 
         }
-        public void DrawSprings()
+        public void Draw()
         {
             //if (springList.IsUnityNull()) return;
-            
-            Gizmos.color = Color.green;
-            
-            foreach (Spring s in springList)
+
+            //Gizmos.color = Color.green;
+
+            foreach (var spring in springList)
             {
-                Vector3 posA = s.startParticle.pos;
-                Vector3 posB = s.endParticle.pos;
-                
-                Debug.DrawLine(posA, posB, Color.green);
-                
+                spring.Draw();
             }
+
         }
     }
 }

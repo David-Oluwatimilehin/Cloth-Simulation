@@ -13,7 +13,6 @@ namespace RevisedParticle
     {
         // Forces
         Force force;
-
         
         public Particle[,] particleArr { get; private set; }
         private SpringManager springManager;
@@ -21,15 +20,15 @@ namespace RevisedParticle
         private SimulationValues sv;
         
         private int rows, columns;
-        bool windEffect;
-        private float windTime = 0f;
+       
+        //private float windTime = 0f;
 
         readonly float radius;
         readonly float spacing;
         public ParticleManager(SimulationValues simValues) {
 
-            //
-            windEffect = false;
+            
+            //windEffect = false;
             
             rows = simValues.rows;
             columns = simValues.columns;
@@ -40,7 +39,7 @@ namespace RevisedParticle
             particleArr = new Particle[rows, columns];
 
             force = new Force(simValues.windStrength,simValues.gravity);
-            springManager = new SpringManager();
+           
             
                         
         }
@@ -56,29 +55,46 @@ namespace RevisedParticle
                 {
 
                     Vector3 spawnPos = origin - new Vector3(x * spacing, y * spacing, 0);
-                    Particle tempParticle = new Particle(spawnPos, sv);
+                    Particle tempParticle = new Particle(spawnPos, sv.mass, sv.friction, sv.dragCoefficient);
 
-                    if (y == 0)
-                    {
-                        tempParticle.SetMass(500);
-                        tempParticle.IsFixed = true;
-                    }
+                    //if (y == 0)
+                    //{
+                    //    tempParticle.SetMass(500);
+                    //    tempParticle.IsFixed = true;
+                    //}
 
                     particleArr[x, y] = tempParticle;
                 }
             }
-            
+            particleArr[0, 0].SetMass(500);
+            particleArr[0, 0].IsFixed = true; // Top-left corner
+
+            particleArr[rows/2-1, 0].SetMass(500);
+            particleArr[rows/2-1,0].IsFixed = true;
+
+            particleArr[rows - 1, 0].SetMass(500);
+            particleArr[rows - 1, 0].IsFixed = true; // Bottom-right corner
             Debug.Log(particleArr.Length);
 
-            springManager.SpawnSprings(particleArr, sv);
+            
 
 
         }
-        public void SetWindActing()
+        
+
+        public void CalculateForces(float fdt)
         {
-            windEffect = !windEffect;
-        }
+            
+            Vector3 gravityForce = force.GenerateGravityForce();
 
+            foreach (var particle in particleArr)
+            {
+
+                particle.AddForce(gravityForce);
+                particle.SumInternalForces(fdt);
+
+            }
+        }
         public void SpawnParticles(Transform parentTransform)
         {
             float posX = parentTransform.position.x;
@@ -96,14 +112,14 @@ namespace RevisedParticle
 
                     spawnPos = new Vector3(posX, posY, posZ);
                     
-                    Particle particle = new Particle(spawnPos, sv);
+                    //Particle particle = new Particle(spawnPos, sv);
                     
 
                     if (y == 0)
                     {
-                        particle.IsFixed = true;              
+                        //particle.IsFixed = true;              
                     }
-                    Debug.Log(particle.IsFixed);
+                    //Debug.Log(particle.IsFixed);
 
                                         
                     //particleList.Add(particle);
@@ -114,26 +130,6 @@ namespace RevisedParticle
 
         public void UpdateParticles(float deltaTime)
         {
-            windTime += deltaTime;
-            
-            Vector3 windForce = Vector3.zero;
-            Vector3 gravityForce = force.GenerateGravityForce();  
-
-            if (windEffect)
-                windForce += force.GenerateWindForce(windTime, 0.25f);           
-            
-            foreach (var particle in particleArr)
-            {
-                              
-                particle.AddForce(gravityForce);
-                particle.AddForce(windForce);
-                particle.SumInternalForces(deltaTime);
-                
-                
-            }
-
-            springManager.UpdateSprings(deltaTime);
-
             foreach (var particle in particleArr)
             {
                 particle.Update(deltaTime);
@@ -142,7 +138,7 @@ namespace RevisedParticle
         }
         
 
-        public void DrawParticlesAndSprings()
+        public void Draw()
         {
             if (particleArr.IsUnityNull()) return;
 
@@ -153,7 +149,6 @@ namespace RevisedParticle
                 Gizmos.DrawWireSphere(particle.pos, radius);
             }
 
-            springManager.DrawSprings();
 
         }
 
