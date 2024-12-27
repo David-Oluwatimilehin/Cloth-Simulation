@@ -8,8 +8,6 @@ I chose to move the particles using the verlet integration for stability. It req
 ![image](https://github.com/user-attachments/assets/5c66c0b3-29be-48d6-992a-68ab3e15ea03)
 
 ## Areas for Improvement
-### Implementation
-The current implementation could use the addition of bending springs. This would serve to improve the realism of the cloths' behaviour.
 ### Rendering
 I would change the use of Debug Drawline and Gizmos to render the springs and particles using compute shaders.
 ### Approach
