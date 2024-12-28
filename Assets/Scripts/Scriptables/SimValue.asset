@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: SimValue
   m_EditorClassIdentifier: 
   rows: 10
-  columns: 10
+  columns: 5
   spacing: 1
   particleRadius: 0.15
   mass: 1

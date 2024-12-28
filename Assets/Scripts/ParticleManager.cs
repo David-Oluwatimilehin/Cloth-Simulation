@@ -1,4 +1,5 @@
 
+using DavidOluwatimilehin;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,10 +14,11 @@ namespace RevisedParticle
     {
         // Forces
         Force force;
-        
+
         public Particle[,] particleArr { get; private set; }
         private SpringManager springManager;
-        
+        private WindManager windManager;
+
         private SimulationValues sv;
         
         private int rows, columns;
@@ -39,7 +41,7 @@ namespace RevisedParticle
             particleArr = new Particle[rows, columns];
 
             force = new Force(simValues.windStrength,simValues.gravity);
-           
+            windManager = new WindManager(new Vector3(1, 0, 0), simValues.windStrength, 0.5f, 0.1f);
             
                         
         }
@@ -57,23 +59,23 @@ namespace RevisedParticle
                     Vector3 spawnPos = origin - new Vector3(x * spacing, y * spacing, 0);
                     Particle tempParticle = new Particle(spawnPos, sv.mass, sv.friction, sv.dragCoefficient);
 
-                    //if (y == 0)
-                    //{
-                    //    tempParticle.SetMass(500);
-                    //    tempParticle.IsFixed = true;
-                    //}
+                    if (y == 0)
+                    {
+                        tempParticle.SetMass(500);
+                        tempParticle.IsFixed = true;
+                    }
 
                     particleArr[x, y] = tempParticle;
                 }
             }
-            particleArr[0, 0].SetMass(500);
-            particleArr[0, 0].IsFixed = true; // Top-left corner
+            //particleArr[0, 0].SetMass(500);
+            //particleArr[0, 0].IsFixed = true; // Top-left corner
 
-            particleArr[rows/2-1, 0].SetMass(500);
-            particleArr[rows/2-1,0].IsFixed = true;
+            //particleArr[rows/2-1, 0].SetMass(500);
+            //particleArr[rows/2-1,0].IsFixed = true;
 
-            particleArr[rows - 1, 0].SetMass(500);
-            particleArr[rows - 1, 0].IsFixed = true; // Bottom-right corner
+            //particleArr[rows - 1, 0].SetMass(500);
+            //particleArr[rows - 1, 0].IsFixed = true; // Bottom-right corner
             Debug.Log(particleArr.Length);
 
             
@@ -84,14 +86,20 @@ namespace RevisedParticle
 
         public void CalculateForces(float fdt)
         {
-            
+            float currentTime = Time.time;
+            Vector3 windForce = windManager.GetWindForce(currentTime);
             Vector3 gravityForce = force.GenerateGravityForce();
 
             foreach (var particle in particleArr)
             {
+                if (!particle.IsFixed)
+                {
+                    particle.AddForce(gravityForce);
+                    particle.AddForce(windForce * fdt);
+                    particle.SumInternalForces(fdt);
 
-                particle.AddForce(gravityForce);
-                particle.SumInternalForces(fdt);
+                }
+                
 
             }
         }
@@ -141,7 +149,6 @@ namespace RevisedParticle
         public void Draw()
         {
             if (particleArr.IsUnityNull()) return;
-
                      
             foreach (var particle in particleArr)
             {
