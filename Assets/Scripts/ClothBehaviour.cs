@@ -31,17 +31,12 @@ namespace RevisedParticle
 
             ParticleManager.SetupParticles(cachedTransform);
             SpringManager.SpawnSprings(ParticleManager.particleArr);
+                  
 
         }
-        private void Update()
-        {
-            
-        }
-
-        // Update is called once per frame
+        
         void FixedUpdate()
         {
-            
             ParticleManager.CalculateForces(Time.fixedDeltaTime);
             SpringManager.UpdateSprings(Time.fixedDeltaTime);
             ParticleManager.UpdateParticles(Time.fixedDeltaTime);

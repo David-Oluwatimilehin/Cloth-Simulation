@@ -59,9 +59,9 @@ namespace RevisedParticle
         {
             if (_isFixed) return;
 
-            Vector3 tempPos = pos;
+            Vector3 tempPos = pos; //
 
-            pos += (pos - prevPos) * (1 - _friction) + acc * time * time;
+            pos = (tempPos * 2) - prevPos + acc * (1 - _friction) * time * time;
 
             prevPos = tempPos;
 

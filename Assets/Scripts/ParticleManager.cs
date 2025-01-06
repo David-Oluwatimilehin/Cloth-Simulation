@@ -20,8 +20,9 @@ namespace RevisedParticle
         private WindManager windManager;
 
         private SimulationValues sv;
-        
-        private int rows, columns;
+
+        public int rows {get; private set; }
+        public int columns { get; private set; }
        
         //private float windTime = 0f;
 
@@ -103,6 +104,12 @@ namespace RevisedParticle
 
             }
         }
+
+
+
+
+
+
         public void SpawnParticles(Transform parentTransform)
         {
             float posX = parentTransform.position.x;
