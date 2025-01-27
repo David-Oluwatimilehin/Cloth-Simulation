@@ -23,9 +23,9 @@ namespace DavidOluwatimilehin
         {
             float OffSetX = Mathf.PerlinNoise(time * windSpeed, 0.0f);
             float OffSetY = Mathf.PerlinNoise(0.0f, time * windSpeed);
-            //float OffSetZ = Mathf.PerlinNoise(time * windSpeed, 0.0f);
+            float OffSetZ = Mathf.PerlinNoise(time * windSpeed, 0.0f);
 
-            Vector3 dynamicDirection = windDirection + new Vector3(OffSetX, OffSetY, 0) * variability;
+            Vector3 dynamicDirection = windDirection + new Vector3(OffSetX, OffSetY, OffSetZ) * variability;
 
             return dynamicDirection.normalized * strength;
         }

@@ -42,7 +42,7 @@ namespace RevisedParticle
             particleArr = new Particle[rows, columns];
 
             force = new Force(simValues.windStrength,simValues.gravity);
-            windManager = new WindManager(new Vector3(1, 0, 0), simValues.windStrength, 0.5f, 0.1f);
+            windManager = new WindManager(new Vector3(0, -1, 0), simValues.windStrength, 0.5f, 0.1f);
             
                         
         }
@@ -96,19 +96,12 @@ namespace RevisedParticle
                 if (!particle.IsFixed)
                 {
                     particle.AddForce(gravityForce);
-                    particle.AddForce(windForce * fdt);
+                    particle.AddForce(windForce);
                     particle.SumInternalForces(fdt);
-
-                }
-                
+                }                
 
             }
         }
-
-
-
-
-
 
         public void SpawnParticles(Transform parentTransform)
         {
@@ -160,7 +153,7 @@ namespace RevisedParticle
             foreach (var particle in particleArr)
             {
                 Gizmos.color = particle.IsFixed ? Color.white : Color.red;
-                Gizmos.DrawWireSphere(particle.pos, radius);
+                Gizmos.DrawSphere(particle.pos, radius);
             }
 
 

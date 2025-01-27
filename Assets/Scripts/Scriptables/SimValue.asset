@@ -12,17 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29b4783b393a7dc4599948b83ee3a05a, type: 3}
   m_Name: SimValue
   m_EditorClassIdentifier: 
-  rows: 5
-  columns: 5
+  rows: 15
+  columns: 10
   spacing: 1
   particleRadius: 0.15
   mass: 2
   gravity: 9.81
-  windStrength: 10
+  windStrength: 35
   dragCoefficient: 1
   friction: 0.95
   springConstant: 100
-  dampValue: 0.85
-  shearSpringConstant: 100
-  shearDampValue: 0.85
+  dampValue: 0.95
+  shearSpringConstant: 80
+  shearDampValue: 0.8
   bendSpringConstant: 100
