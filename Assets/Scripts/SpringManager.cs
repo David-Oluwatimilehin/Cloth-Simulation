@@ -69,16 +69,14 @@ namespace RevisedParticle
                     // For Bending Springs
                     if (i + 2 < simValues.rows)
                         CreateBendingSpring(current, particleArray[i + 2, j], simValues.spacing * 2);
-                        bendSpringCount++;
+                        //bendSpringCount++;
 
                     if (j +2 < simValues.columns)
                         CreateBendingSpring(current, particleArray[i, j + 2], simValues.spacing * 2);
-                        bendSpringCount++;
+                        //bendSpringCount++;
 
                 }
             }
-
-            Debug.Log("Spring Count: " + bendSpringCount);
 
         }
         public void Draw()
