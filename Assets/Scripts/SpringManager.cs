@@ -8,8 +8,10 @@ namespace RevisedParticle
 {
     public class SpringManager
     {
+        
         private List<Spring> springList;
         private readonly SimulationValues simValues;
+        
         public SpringManager(SimulationValues sv) 
         {
             springList = new List<Spring>();
@@ -37,54 +39,53 @@ namespace RevisedParticle
             foreach (var spring in springList)
             {
                 spring.ApplyForce(dt);
-
             }
         }
         public void SpawnSprings(Particle[,] particleArray)
         {
-            // Resting Distance for Shear Springs
+            // Gets the rest distance for shear Springs
             float diagLength = Mathf.Sqrt(2) * simValues.spacing;
-            int bendSpringCount = 0;
-            for (int i = 0; i < simValues.rows; i++)
+            
+            for (int i = 0; i < simValues.columns; i++) 
             {
-                for (int j = 0; j < simValues.columns; j++)
+                for (int j = 0; j < simValues.rows; j++) 
                 {
-                    Particle current = particleArray[i, j];
+                    Particle current = particleArray[j, i]; // current particle at [row, column]
+                    
+                    // For Structural springs
+                    if (i < simValues.columns - 1) 
+                        CreateSpring(current, particleArray[j, i + 1]); // [row, column + 1]
+                    
+                    if (j < simValues.rows - 1) 
+                        CreateSpring(current, particleArray[j + 1, i]); // [row + 1, column]
 
-                    // For Structural Springs
-                    if (i < simValues.rows - 1)
-                        CreateSpring(current, particleArray[i + 1, j]);
+                    // For shearing springs (connecting diagonally)
+                    // Connect to the bottom-right particle (next row, next column)
+                    if (i < simValues.columns - 1 && j < simValues.rows - 1)
+                        CreateDiagonalSpring(current, particleArray[j + 1, i + 1], diagLength); // Correct: [row + 1, column + 1]
 
-                    if (j < simValues.columns - 1)
-                        CreateSpring(current, particleArray[i, j + 1]);
+                    
+                    if (i > 0 && j < simValues.rows - 1) // Corrected: ensure 'i-1' and 'j+1' are valid
+                        CreateDiagonalSpring(current, particleArray[j + 1, i - 1], diagLength); // Corrected: [row + 1, column - 1]
 
-                    // For Shearing Springs
-                    if (i < simValues.rows - 1 && j < simValues.columns - 1)
-                        CreateDiagonalSpring(current, particleArray[i + 1, j + 1], diagLength);
-                        
+                    // For Bending Springs (connecting to particles two steps away)
+                    // Uncomment and correct these if you intend to use them.
+                    /*
+                    // Connect to the particle two columns to the right (same row, column + 2)
+                    if (i + 2 < simValues.columns)
+                        CreateBendingSpring(current, particleArray[j, i + 2], simValues.spacing * 2); // Corrected: [row, column + 2]
 
-                    if (i < simValues.rows - 1 && j > 0)
-                        CreateDiagonalSpring(current, particleArray[i + 1, j - 1], diagLength);
-
-                    // For Bending Springs
-                    if (i + 2 < simValues.rows)
-                        CreateBendingSpring(current, particleArray[i + 2, j], simValues.spacing * 2);
-                        //bendSpringCount++;
-
-                    if (j +2 < simValues.columns)
-                        CreateBendingSpring(current, particleArray[i, j + 2], simValues.spacing * 2);
-                        //bendSpringCount++;
-
+                    // Connect to the particle two rows down (row + 2, same column)
+                    if (j + 2 < simValues.rows)
+                        CreateBendingSpring(current, particleArray[j + 2, i], simValues.spacing * 2); // Corrected: [row + 2, column]
+                    */
                 }
             }
 
         }
         public void Draw()
         {
-            //if (springList.IsUnityNull()) return;
-
-            //Gizmos.color = Color.green;
-
+            // Draws Gizmos.
             foreach (var spring in springList)
             {
                 spring.Draw();

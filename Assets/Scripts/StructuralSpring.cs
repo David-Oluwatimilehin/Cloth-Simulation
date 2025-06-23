@@ -6,8 +6,8 @@ namespace RevisedParticle
 {
     public class StructuralSpring : Spring
     {
-        private float _springConstant;
-        private float _springDamping;
+        private readonly float _springConstant;
+        private readonly float _springDamping;
         public StructuralSpring(Particle particleOne, Particle particleTwo, float restLength, float springStiffness, float dampValue)
         {
             startParticle = particleOne;
@@ -41,10 +41,7 @@ namespace RevisedParticle
         }
         public override void Draw()
         {
-            Vector3 posA = startParticle.pos;
-            Vector3 posB = endParticle.pos;
-            
-            Debug.DrawLine(posA, posB, Color.green);
+            Debug.DrawLine(startParticle.pos, endParticle.pos, Color.green);
         }
     }
 

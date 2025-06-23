@@ -7,18 +7,18 @@ namespace RevisedParticle
 {
     public class Particle
     {
+        
         public Vector3 pos { get; private set; }
         private Vector3 _prevPos;
         private Vector3 _acc;
+        
         private float _friction;
         public bool IsFixed { get => _isFixed; set => _isFixed = value; }
         
         private float _dragCoefficient;
         private float _mass;
         private bool _isFixed;
-
         
-
         public Particle(Vector3 initPos, float mass, float friction, float dragValue)
         {
             pos = initPos;
@@ -36,7 +36,7 @@ namespace RevisedParticle
         public void AddForce(Vector3 force)
         {
             if(force == Vector3.zero) return;
-
+            
             _acc += force / _mass;
         }
         public void SetMass(float mass)
@@ -45,7 +45,7 @@ namespace RevisedParticle
         }
         public void SumInternalForces(float time)
         {
-            // Calcualates the 
+            // Calculates the average drag and friction to act on particles
             Vector3 dragForce = -GetRelativeVelocity(time).normalized * (_dragCoefficient * (GetRelativeVelocity(time).magnitude * GetRelativeVelocity(time).magnitude));
             AddForce(dragForce);
 
@@ -57,7 +57,7 @@ namespace RevisedParticle
         {
             if (_isFixed) return;
             
-            // Uses the Stormer-Verlet integration to move the position 
+            // Uses the Stormer-Verlet integration to move the position of particles
             Vector3 tempPos = pos; 
 
             pos = (tempPos * 2) - _prevPos + _acc * ((1 - _friction) * time * time);

@@ -42,10 +42,7 @@ namespace RevisedParticle
 
         public override void Draw()
         {
-            Vector3 posA = startParticle.pos;
-            Vector3 posB = endParticle.pos;
-
-            Debug.DrawLine(posA, posB, Color.yellow);
+            Debug.DrawLine(startParticle.pos,  endParticle.pos, Color.yellow);
         }
     }
 }

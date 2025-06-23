@@ -29,15 +29,11 @@ namespace RevisedParticle
             float lengthDifference = currentLength - _restLength;
 
 
-            Vector3 force = direction.normalized * lengthDifference * _bendSpringConstant;
+            Vector3 force = direction.normalized * (lengthDifference * _bendSpringConstant);
 
             startParticle.AddForce(force);
             endParticle.AddForce(-force);
         }
-        public override void Draw()
-        {
-            base.Draw();
-                     
-        }
+        
     }
 }
