@@ -86,7 +86,6 @@ namespace RevisedParticle
 
         }
         
-
         public void Draw()
         {
             if (particleArr.IsUnityNull()) return;

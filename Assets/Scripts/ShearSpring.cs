@@ -24,20 +24,19 @@ namespace RevisedParticle
             Vector3 direction = endParticle.pos - startParticle.pos;
             float distance = direction.magnitude;
 
-            if (distance == 0) return;
+            if (distance == 0) return; // If the particles dont move exit
 
-            direction.Normalize();
+            direction.Normalize(); // Grabs the unit vector
 
-            float springForce = _shearSpringConstant * (distance - _restDist);
+            float springForce = _shearSpringConstant * (distance - _restDist); // Grabs force from the springs extension 
+            Vector3 relativeVelocity = endParticle.GetRelativeVelocity(dt) - startParticle.GetRelativeVelocity(dt); // Get relative velocity between the two particles.
 
-            Vector3 relativeVelocity = endParticle.GetRelativeVelocity(dt) - startParticle.GetRelativeVelocity(dt);
+            float dampingForce = _shearSpringDamping * Vector3.Dot(relativeVelocity, direction); // Calculates the dampening force which opposes relative motion of the spring
+            Vector3 combinedForce = (springForce + dampingForce) * direction;
 
-            float dampingForce = _shearSpringDamping * Vector3.Dot(relativeVelocity, direction);
-
-            Vector3 force = (springForce + dampingForce) * direction;
-
-            startParticle.AddForce(force);
-            endParticle.AddForce(-force);
+            // Applies an equal and opposite force to the particles.
+            startParticle.AddForce(combinedForce);
+            endParticle.AddForce(-combinedForce);
         }
 
         public override void Draw()

@@ -29,9 +29,7 @@ namespace RevisedParticle
         [Header("Shear Springs: ")]
         public float shearSpringConstant = 7f;
         public float shearDampValue = 0.7f;
-
-        [Header("Bending Springs: ")]
-        public float bendSpringConstant;
+        
                 
     }
 }

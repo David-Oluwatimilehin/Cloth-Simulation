@@ -5,7 +5,6 @@ using UnityEngine;
 
 namespace RevisedParticle
 {
-    // Implementation of the Mass spring model for cloth 
     public class ClothBehaviour : MonoBehaviour
     {
         public SimulationValues simStats;
@@ -52,7 +51,7 @@ namespace RevisedParticle
                     // Check bounds just in case, though it should match now
                     if (oneDIndex < _meshVertices.Length)
                     {
-                        // Convert world-space particle position to local space of this GameObject
+                        // Convert world-space particle position to local space of the gameobject
                         _meshVertices[oneDIndex] =
                             _cachedTransform.InverseTransformPoint(ParticleManager.particleArr[i, j].pos);
                     }
@@ -64,36 +63,29 @@ namespace RevisedParticle
             _mesh.RecalculateNormals();
 
             Debug.Log("The mesh vertex count is " + _mesh.vertexCount);
-        }
-        
+        }        
 
         private void GenerateClothMesh(int rows, int columns, float spacing)
         {
             // Calculate total number of vertices (each particle is a vertex)
             int vertexCount = rows * columns;
             Vector3[] vertices = new Vector3[vertexCount];
-            Vector2[] uvs = new Vector2[vertexCount]; // For texture mapping
+            Vector2[] uvs = new Vector2[vertexCount]; 
 
             // Populate initial vertex positions and UVs
-            
             for (int r = 0; r < rows; r++)
             {
                 for (int c = 0; c < columns; c++)
                 {
                     int index = (r * columns) + c;
-                    // Initial local position. Adjust based on how your particles are spawned relative to origin.
-                    // This creates a flat grid.
-                    vertices[index] = new Vector3(c * spacing, -r * spacing, 0); // Assuming your ParticleManager spawns (x,y) with x increasing horizontally, y decreasing vertically
-
+                    vertices[index] = new Vector3(c * spacing, -r * spacing, 0);
                     // UVs for texture mapping (0 to 1 range)
                     uvs[index] = new Vector2((float)c / (columns - 1), (float)r / (rows - 1));
                 }
             }
-
-            // Calculate total number of triangles (each quad is 2 triangles)
-            // A (rows)x(columns) grid has (rows-1)x(columns-1) quads
+            
             int numQuads = (rows - 1) * (columns - 1);
-            int[] triangles = new int[numQuads * 6]; // 6 indices per quad (2 triangles * 3 vertices/triangle)
+            int[] triangles = new int[numQuads * 6]; 
 
             int triIndex = 0;
             for (int r = 0; r < rows - 1; r++)
@@ -106,10 +98,12 @@ namespace RevisedParticle
                     int bottomLeft = ((r + 1) * columns) + c;
                     int bottomRight = ((r + 1) * columns) + c + 1;
                     
+                    // top triangle
                     triangles[triIndex++] = bottomLeft;
-                    triangles[triIndex++] = topLeft;
+                    triangles[triIndex++] = topLeft; 
                     triangles[triIndex++] = topRight;
                     
+                    // bottom triangle
                     triangles[triIndex++] = bottomLeft;
                     triangles[triIndex++] = topRight;
                     triangles[triIndex++] = bottomRight;
@@ -139,6 +133,7 @@ namespace RevisedParticle
             {
                 for (int j = 0; j < simStats.columns; j++)
                 {
+                    // Now gets the correct index
                     int oneDIndex = (i * simStats.columns) + j;
                     
                     if (oneDIndex < _meshVertices.Length)
@@ -157,9 +152,9 @@ namespace RevisedParticle
 
         void FixedUpdate()
         {
-            ParticleManager.CalculateForces(Time.fixedDeltaTime);
-            SpringManager.UpdateSprings(Time.fixedDeltaTime);
-            ParticleManager.UpdateParticles(Time.fixedDeltaTime);
+            ParticleManager.CalculateForces(Time.fixedDeltaTime); // Applies the forces to the particles
+            SpringManager.UpdateSprings(Time.fixedDeltaTime); // The spring responds to the forces applied to the particles
+            ParticleManager.UpdateParticles(Time.fixedDeltaTime); // The particles then have their positions changed by acceleration
         }
         
         private void OnDrawGizmos()
