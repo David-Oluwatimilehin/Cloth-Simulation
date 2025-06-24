@@ -1,7 +1,7 @@
 # Cloth-Simulation
 ![Screenshot 2024-12-02 152005](https://github.com/user-attachments/assets/6edb1ca5-20fa-476b-b7a7-15211e6e64c0)
 
-The approach here uses the mass-spring model, which uses a network of particles given mass connected through springs.
+The approach here utilises the mass-spring model, which involves a network of particles given mass connected by springs.
 I used a force-based dynamics approach for the simulation. This involved calculating the forces and adding them to the acceleration.
 I chose to move the particles using the verlet integration for stability. It required dampening to prevent turbulent oscillation. 
 
@@ -13,11 +13,11 @@ I chose to move the particles using the verlet integration for stability. It req
 I would change the use of Debug Drawline and Gizmos to render the springs and particles using compute shaders.
 ### Approach
 I would rewrite this simulation for more accuracy by using position-based dynamics. That would involve predicting the 
-particle positions based on their velocity and enforcing constraints. These would keep the particles within an acceptable range.
-For the integration, I would use a modified velocity verlet.
+particle positions based on their velocity and enforcing constraints. These would help to keep the particles within an acceptable range.
+For the numerical integration, I would use a modified velocity Verlet method to move the particles more efficiently.
 
 ## References
-Helpful resources that made everything easier 
+Helpful resources that made the project easier 
 
 https://www.youtube.com/watch?v=-GWTDhOQU6M
 
