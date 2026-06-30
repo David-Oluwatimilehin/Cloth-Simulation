@@ -7,31 +7,24 @@ namespace RevisedParticle
     {
         // Forces
         private WindForce _windForce;
+        public Particle[,] ParticleArr { get; }
         
-        public Particle[,] particleArr { get; }
-        private SpringManager _springManager;
         private SimulationValues _sv;
-        
         
         private readonly float _radius;
         private readonly float _spacing;
         private readonly float _gravity;
-        public int rows {get; }
-        public int columns { get; }
         
-        
-        public ParticleManager(SimulationValues simValues) {
-            
-            rows = simValues.rows;
-            columns = simValues.columns;
+        public ParticleManager(SimulationValues simValues) 
+        {
             _spacing = simValues.spacing;
             _radius = simValues.particleRadius;
             _gravity = simValues.gravity;
             _sv = simValues;
             
-            particleArr = new Particle[rows, columns];
+            ParticleArr = new Particle[simValues.rows, simValues.columns];
             
-            _windForce = new WindForce(new Vector3(0, -1, 0), simValues.windStrength, 0.5f, 0.1f);
+            _windForce = new WindForce(new Vector3(0, -1, 0), simValues.windStrength, simValues.windChangability, simValues.changeSpeed);
         }
         
         public void SetupParticles(Transform parentTransform)
@@ -39,9 +32,9 @@ namespace RevisedParticle
             Vector3 origin = parentTransform.position;
             
             // The functions populate the 2d grid by row x column count
-            for (int y = 0; y < columns; y++)
+            for (int y = 0; y < _sv.columns; y++)
             {
-                for (int x = 0; x < rows; x++)
+                for (int x = 0; x < _sv.rows; x++)
                 {
                     Vector3 spawnPos = origin - new Vector3(x * _spacing, y * _spacing, 0);
                     Particle tempParticle = new Particle(spawnPos, _sv.mass, _sv.friction, _sv.dragCoefficient);
@@ -52,10 +45,10 @@ namespace RevisedParticle
                         tempParticle.IsFixed = true;
                     }
 
-                    particleArr[x, y] = tempParticle;
+                    ParticleArr[x, y] = tempParticle;
                 }
             }
-            Debug.Log(particleArr.Length);
+            Debug.Log(ParticleArr.Length);
 
         }
 
@@ -64,7 +57,7 @@ namespace RevisedParticle
             float currentTime = Time.time;
             Vector3 windForce = _windForce.GetWindForce(currentTime);
 
-            foreach (var particle in particleArr)
+            foreach (var particle in ParticleArr)
             {
                 // If the particle isn't fixed add the forces 
                 if (!particle.IsFixed)
@@ -79,7 +72,7 @@ namespace RevisedParticle
 
         public void UpdateParticles(float deltaTime)
         {
-            foreach (var particle in particleArr)
+            foreach (var particle in ParticleArr)
             {
                 particle.Update(deltaTime);
             }
@@ -88,10 +81,10 @@ namespace RevisedParticle
         
         public void Draw()
         {
-            if (particleArr.IsUnityNull()) return;
+            if (ParticleArr.IsUnityNull()) return;
                    
             // Draws the particles using Gizmos
-            foreach (var particle in particleArr)
+            foreach (var particle in ParticleArr)
             {
                 Gizmos.color = particle.IsFixed ? Color.white : Color.red;
                 Gizmos.DrawSphere(particle.pos, _radius);

@@ -12,10 +12,10 @@ namespace RevisedParticle
         private Vector3 _prevPos;
         private Vector3 _acc;
         
-        private float _friction;
+        private readonly float _friction;
         public bool IsFixed { get => _isFixed; set => _isFixed = value; }
         
-        private float _dragCoefficient;
+        private readonly float _dragCoefficient;
         private float _mass;
         private bool _isFixed;
         
@@ -30,7 +30,6 @@ namespace RevisedParticle
             
             _acc = Vector3.zero;
             _isFixed = false;
-
         }
 
         public void AddForce(Vector3 force)
@@ -60,7 +59,7 @@ namespace RevisedParticle
             // Uses the Stormer-Verlet integration to move the position of particles
             Vector3 tempPos = pos; 
 
-            pos = (tempPos * 2) - _prevPos + _acc * ((1 - _friction) * time * time);
+            pos = (tempPos * 2) - _prevPos + _acc * (time * time);
 
             _prevPos = tempPos;
 

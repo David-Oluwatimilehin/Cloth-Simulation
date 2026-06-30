@@ -31,13 +31,13 @@ namespace RevisedParticle
 
             // Sets up the particles and springs
             ParticleManager.SetupParticles(_cachedTransform);
-            SpringManager.SpawnSprings(ParticleManager.particleArr);
+            SpringManager.SpawnSprings(ParticleManager.ParticleArr);
 
             _mesh = new Mesh();
             _mesh.name = "GeneratedClothMesh";
             meshFilter.mesh = _mesh;
 
-            GenerateClothMesh(ParticleManager.rows, ParticleManager.columns, simStats.spacing);
+            GenerateClothMesh(simStats.rows, simStats.columns, simStats.spacing);
 
             // Ensure meshVertices array is correctly sized to fit the mesh's vertices
             _meshVertices = new Vector3[_mesh.vertexCount];
@@ -53,7 +53,7 @@ namespace RevisedParticle
                     {
                         // Convert world-space particle position to local space of the gameobject
                         _meshVertices[oneDIndex] =
-                            _cachedTransform.InverseTransformPoint(ParticleManager.particleArr[i, j].pos);
+                            _cachedTransform.InverseTransformPoint(ParticleManager.ParticleArr[i, j].pos);
                     }
                 }
             }
@@ -123,7 +123,7 @@ namespace RevisedParticle
 
         private void Update()
         {
-            if (_mesh == null || ParticleManager == null || ParticleManager.particleArr == null || _meshVertices == null)
+            if (_mesh == null || ParticleManager == null || ParticleManager.ParticleArr == null || _meshVertices == null)
             {
                 return;
             }
@@ -139,7 +139,7 @@ namespace RevisedParticle
                     if (oneDIndex < _meshVertices.Length)
                     {
                         // Updates the mesh vertices with their new positions
-                        _meshVertices[oneDIndex] = _cachedTransform.InverseTransformPoint(ParticleManager.particleArr[i, j].pos);
+                        _meshVertices[oneDIndex] = _cachedTransform.InverseTransformPoint(ParticleManager.ParticleArr[i, j].pos);
                     }
                 }
             }

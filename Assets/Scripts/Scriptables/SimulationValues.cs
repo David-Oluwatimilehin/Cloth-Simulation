@@ -18,10 +18,15 @@ namespace RevisedParticle
         [Header("Constants")]
         public float mass = 1;
         public float gravity = 9.81f;
-        public float windStrength = 10f;
+        
         public float dragCoefficient = 0.98f;
         public float friction=0.95f;
-
+        
+        [Header("Wind Force:")]
+        public float changeSpeed=0.1f;
+        public float windChangability=0.5f;
+        public float windStrength = 10f;
+        
         [Header("Structural Springs: ")]
         public float springConstant=10f;
         public float dampValue = 0.9f;
@@ -30,6 +35,10 @@ namespace RevisedParticle
         public float shearSpringConstant = 7f;
         public float shearDampValue = 0.7f;
         
-                
+        [Header("Bend Springs: ")]
+        
+        public float bendSpringConstant= 50.0f; // Bending stiffness constant
+        public float bendDamping=5.0f;
+        public float  bendRestAngle= 0;
     }
 }

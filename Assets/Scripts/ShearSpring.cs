@@ -6,8 +6,8 @@ namespace RevisedParticle
 {
     public class ShearSpring : Spring
     {
-        private float _shearSpringConstant;
-        private float _shearSpringDamping;
+        private readonly float _shearSpringConstant;
+        private readonly float _shearSpringDamping;
         public ShearSpring(Particle particleOne, Particle particleTwo, float restLength, float springConstant, float dampValue)
         {
             startParticle = particleOne;
